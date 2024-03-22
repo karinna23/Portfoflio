@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile Details</title>
+</head>
+<body>
+    <h2>{% if object %}Edit{% else %}Add{% endif %} Profile Details</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.cv_image.id_for_label }}">CV Preview:</label>
+            {{ form.cv_image }}
+        </div>       
+        <div class="form-group">
+            <label for="{{ form.cv_file.id_for_label }}">CV File:</label>
+            {{ form.cv_file }}
+        </div>  
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

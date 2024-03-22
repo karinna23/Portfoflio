@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Home Details</title>
+</head>
+<body>
+    <h2>{% if object %}Edit{% else %}Add{% endif %} Home Details</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.image.id_for_label }}">Main Image:</label>
+            {{ form.image }}
+        </div>        
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
