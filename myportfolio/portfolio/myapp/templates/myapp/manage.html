@@ -1,0 +1,231 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="icon" type="image/png" href="{% static 'img/plogo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <form action="{% url 'myapp:logout' %}" method="post">
+        {% csrf_token %}
+    <section>
+        <h2>Homes</h2>
+        <table>
+            <tr>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+            {% for home in homes %}
+            <tr>
+                <td>{{ home.image }}</td>
+                <td>
+                    <a href="{% url 'myapp:home_edit' pk=home.pk %}" class="edit-home" onclick="openHomeEditPage(event)">Edit</a>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <section>
+        <h2>Abouts</h2>
+        <table>
+            <tr>
+                <th>About Me</th>
+                <th>Image 1</th>
+                <th>Image 2</th>
+                <th>Actions</th>
+            </tr>
+            {% for about in abouts %}
+            <tr>
+                <td>{{ about.aboutme }}</td>
+                <td>{{ about.image1 }}</td>
+                <td>{{ about.image2 }}</td>
+                <td>
+                    <a href="{% url 'myapp:about_edit' pk=about.pk %}" class="edit-about" onclick="openAboutEditPage(event)">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <section>
+        <h2>Skills</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Logo</th>
+                <th>Percentage</th>
+                <th>Actions</th>
+            </tr>
+            {% for skill in skills %}
+            <tr>
+                <td>{{ skill.name }}</td>
+                <td>{{ skill.logo }}</td>
+                <td>{{ skill.percentage }}</td>
+                <td>
+                    <a href="{% url 'myapp:skill_edit' pk=skill.pk %}" class="edit-skill" onclick="openSkillEditPage(event)">Edit</a>
+                    <form action="{% url 'myapp:delete_skill' skill.pk %}" method="post" id="deleteForm-{{ skill.pk }}">
+                        {% csrf_token %}
+                        <button type="button" class="delete-button" onclick="showDeleteConfirmation('deleteForm-{{ skill.pk }}')">Delete</button>
+                    </form>                                
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="/add_skill" class="add-skill" onclick="newSkillEditPage(event)">Add Skill</a>
+    </section>
+    <section>
+        <h2>Portfolio</h2>
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Link</th>
+                <th>Actions</th>
+            </tr>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.title }}</td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.image }}</td>
+                <td>{{ project.link }}</td>
+                <td>
+                    <a href="{% url 'myapp:portfolio_edit' pk=project.pk %}" class="edit-project"  onclick="openProjectEditPage(event)">Edit</a>
+                    <form action="{% url 'myapp:delete_project' project.pk %}" method="post" id="deleteForm-{{ project.pk }}">
+                        {% csrf_token %}
+                        <button type="button" class="delete-button" onclick="showDeleteConfirmation('deleteForm-{{ project.pk }}')">Delete</button>
+                    </form>                  
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="/add_project" class="add-project"  onclick="newProjectEditPage(event)">Add Project</a>
+    </section>
+    <section>
+        <h2>CV</h2>
+        <table>
+            <tr>
+                <th>CV Image</th>
+                <th>CV File</th>
+                <th>Actions</th>
+            </tr>
+            {% for profile in profiles %}
+            <tr>
+                <td>{{ profile.cv_image }}</td>
+                <td>{{ profile.cv_file }}</td>
+                <td>
+                    <a href="{% url 'myapp:cv_edit' pk=profile.pk %}" class="edit-profile" onclick="openProfileEditPage(event)">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <section>
+        <h2>Messages</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Project Name</th>
+                <th>Actions</th>
+            </tr>
+            {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.name }}</td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.project_name }}</td>
+                <td>
+                    <form action="{% url 'myapp:delete_contact' contact.pk %}" method="post" id="deleteForm-{{ contact.pk }}">
+                        {% csrf_token %}
+                        <button type="button" class="delete-button" onclick="showDeleteConfirmation('deleteForm-{{ contact.pk }}')">Delete</button>
+                    </form>    
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <section>
+        <h2>Socials</h2>
+        <table>
+            <tr>
+                <th>Platform & Link</th>
+                <th>Action</th>
+            </tr>
+            {% for social in socials %}
+            <tr>
+                <td>
+                    {% for platform, url in social.get_urls.items %}
+                        <strong>{{ platform }}:</strong>{{ url }}</a><br>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'myapp:social_edit' pk=social.pk %}" class="edit-social" onclick="openSocialEditPage(event)">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <button type="submit">Logout</button>
+    </form>   
+    <script>
+        function showDeleteConfirmation(formId) {
+            const confirmation = confirm("Are you sure you want to delete this?");
+            if (confirmation) {
+                document.getElementById(formId).submit();
+            }
+        }
+
+        function openHomeEditPage(event) {
+            event.preventDefault(); 
+            var url = event.target.href; // Get the URL from the link's href attribute            
+            window.open(url, '_blank', 'width=650, height=550,toolbar=no,scrollbars=no,resizable=no,max-width=600,max-height=400,min-width=600,min-height=400,background-color=red,top=' + ((window.innerHeight - 400) / 2) + ',left=' + ((window.innerWidth - 600) / 2));
+        }
+
+        function openSkillEditPage(event) {
+            event.preventDefault(); 
+            var url = event.target.href; // Get the URL from the link's href attribute            
+            window.open(url, '_blank', 'width=650, height=450,toolbar=no,scrollbars=no,resizable=no,max-width=600,max-height=400,min-width=600,min-height=400,background-color=red,top=' + ((window.innerHeight - 400) / 2) + ',left=' + ((window.innerWidth - 600) / 2));
+        }
+
+        function newSkillEditPage(event) {
+            event.preventDefault(); 
+            var url = event.target.href; // Get the URL from the link's href attribute            
+            window.open(url, '_blank', 'width=650, height=450,toolbar=no,scrollbars=no,resizable=no,max-width=600,max-height=400,min-width=600,min-height=400,background-color=red,top=' + ((window.innerHeight - 400) / 2) + ',left=' + ((window.innerWidth - 600) / 2));
+        }
+        
+        function openAboutEditPage(event) {
+            event.preventDefault(); 
+            var url = event.target.href; // Get the URL from the link's href attribute            
+            window.open(url, '_blank', 'width=650, height=550,toolbar=no,scrollbars=no,resizable=no,max-width=600,max-height=400,min-width=600,min-height=400,background-color=red,top=' + ((window.innerHeight - 400) / 2) + ',left=' + ((window.innerWidth - 600) / 2));
+        }  
+
+        function openProjectEditPage(event) {
+            event.preventDefault(); 
+            var url = event.target.href; // Get the URL from the link's href attribute            
+            window.open(url, '_blank', 'width=650, height=650,toolbar=no,scrollbars=no,resizable=no,max-width=600,max-height=400,min-width=600,min-height=400,background-color=red,top=' + ((window.innerHeight - 400) / 2) + ',left=' + ((window.innerWidth - 600) / 2));
+        }
+
+        function newProjectEditPage(event) {
+            event.preventDefault(); 
+            var url = event.target.href; // Get the URL from the link's href attribute            
+            window.open(url, '_blank', 'width=650, height=650,toolbar=no,scrollbars=no,resizable=no,max-width=600,max-height=400,min-width=600,min-height=400,background-color=red,top=' + ((window.innerHeight - 400) / 2) + ',left=' + ((window.innerWidth - 600) / 2));
+        }
+
+        function openProfileEditPage(event) {
+            event.preventDefault(); 
+            var url = event.target.href; // Get the URL from the link's href attribute            
+            window.open(url, '_blank', 'width=650, height=700,toolbar=no,scrollbars=no,resizable=no,max-width=600,max-height=400,min-width=600,min-height=400,background-color=red,top=' + ((window.innerHeight - 400) / 2) + ',left=' + ((window.innerWidth - 600) / 2));
+        }
+
+        function openSocialEditPage(event) {
+            event.preventDefault(); 
+            var url = event.target.href; // Get the URL from the link's href attribute            
+            window.open(url, '_blank', 'width=650, height=350,toolbar=no,scrollbars=no,resizable=no,max-width=600,max-height=400,min-width=600,min-height=400,background-color=red,top=' + ((window.innerHeight - 400) / 2) + ',left=' + ((window.innerWidth - 600) / 2));
+        }
+    </script>
+</body>
+</html>

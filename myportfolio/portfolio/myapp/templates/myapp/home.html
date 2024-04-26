@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Home Details</title>
+    <link rel="icon" type="image/png" href="{% static 'img/plogo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+</head>
+<body>
+    <h2>{% if object %}Add{% else %}Edit{% endif %} Home Details</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <div class="form-content1">               
+                <img id="imagePreview" class="preview-image" src="{% if form.instance.image %}{{ form.instance.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" alt="Preview">
+            </div>
+            <div class="form-content">
+                <input type="file" id="fileInput" name="image" accept="image/*" onchange="previewImage(event)" class="choose-file-button">
+            </div>
+        </div>        
+        <button type="submit">Save</button>
+    </form>
+    <script>
+        // Function to preview selected image
+        function previewImage(event) {
+            var input = event.target;
+            var preview = document.getElementById('imagePreview');
+            var reader = new FileReader();
+            
+            reader.onload = function(){
+                preview.src = reader.result;
+            };
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>
+</body>
+</html>
+

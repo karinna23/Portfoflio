@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Social Details</title>
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/plogo.png' %}">
+</head>
+<body>
+    <h2>{% if object %}Add{% else %}Edit{% endif %} Social Details</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_fblink">Facebook Link:</label>
+            <div class="form-content">
+                <input type="url" id="id_fblink" name="fblink" value="{{ form.instance.fblink }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="id_instalink">Instagram Link:</label>
+            <div class="form-content">
+                <input type="url" id="id_instalink" name="instalink" value="{{ form.instance.instalink }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="id_xlink">X Link:</label>
+            <div class="form-content">
+                <input type="url" id="id_xlink" name="xlink" value="{{ form.instance.xlink }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="id_tglink">Telegram Link:</label>
+            <div class="form-content">
+                <input type="url" id="id_tglink" name="tglink" value="{{ form.instance.tglink }}">
+            </div>
+        </div>
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

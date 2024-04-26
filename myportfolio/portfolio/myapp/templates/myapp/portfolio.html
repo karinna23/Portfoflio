@@ -1,0 +1,211 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link rel="icon" type="image/png" href="{% static 'img/plogo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<nav>
+    <img src="{% static 'img/plogo.png' %}" alt="Logo" class="logo">
+    <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#contact">Hire Me</a></li>
+    </ul>
+    <div class="socials">     
+      <li><a href="{{ social_links.fblink }}"><img src="{% static 'img/facebook.png' %}" alt="Facebook" class="socials-logo"></a></li>
+      <li><a href="{{ social_links.instalink }}"><img src="{% static 'img/instagram.png' %}" alt="Instagram" class="socials-logo"></a></li>
+      <li><a href="{{ social_links.xlink }}"><img src="{% static 'img/twitter.png' %}" alt="Twitter" class="socials-logo"></a></li>
+      <li><a href="{{ social_links.tglink }}"><img src="{% static 'img/telegram.png' %}" alt="Telegram" class="socials-logo"></a></li>      
+    </div>
+</nav>
+<section id="home">
+    <div class="shape" data-animate="animate-fadeIn">  
+        {% if home_image %}
+        <img src="{{ home_image.image.url }}" alt="Self" class="intro-img">
+        {% else %}
+        <img src="{% static 'img/intro.png' %}" class="intro-img" alt="Default">
+        {% endif %}
+    </div>   
+    <div class="hometext" data-animate="animate-slideInFromLeft">
+    <h2>Hey There!</h2><p>I am,</p>
+    <h1>Karen Jeska Catoy</h1>
+    <div class="developer">
+        <p id="developer-text"></p>
+    </div>
+    <div class="more">
+        <p>EXPLORE MY PORTFOLIO TO LEARN MORE ABOUT ME!</p>
+    </div> 
+    <a href="#about" data-animate="animate-dropTopFromDown"><img src="{% static 'img/arrow-down.png' %}" alt="Logo" class="down"></a>
+</div>
+</section>
+<section id="about">
+  <h2>About Me</h2>
+  <h1 data-animate="animate-dropDownFromTop">I am<br>Karen Jeska A. Catoy</h1>
+  <div class="all-about">
+      <div class="about-me-container">
+          <div class="about-me" data-animate="animate-slideInFromLeft">
+            {% if about_section %}
+              <p>{{ about_section.aboutme }}</p>
+            {% else %}
+            <p>a 23-year-old senior IT student at Western Mindanao State University. With a passion for development, I delve into both front-end and back-end technologies, relishing the challenge of crafting robust and user-friendly solutions. In the ever-evolving landscape of the IT industry, I am no stranger to its demanding nature. However, I find solace and excitement in the complexities it presents, viewing each obstacle as an opportunity for growth and innovation. Alongside my technical prowess, I possess a keen eye for design, specializing in UI and UX. Beyond my academic pursuits, I am deeply committed to honing my skills, staying abreast of emerging technologies, and contributing meaningfully to the field of IT and design.</p>
+            {% endif %}
+          </div> 
+      </div>
+      <div class="about-img-container" data-animate="animate-slideInFromRight">
+          <div class="about-img01">
+            {% if about_section %}
+              <img src="{{ about_section.image1.url }}" alt="About Image 1">
+              {% else %}
+              <img src="{% static 'img/1.jpg' %}"alt="About Image 1">
+              {% endif %}
+          </div>
+          <div class="about-img02">
+            {% if about_section %}
+            <img src="{{ about_section.image2.url }}" alt="About Image 2">
+            {% else %}
+            <img src="{% static 'img/2.jpg' %}"alt="About Image 2">
+            {% endif %}          
+          </div>
+      </div>
+  </div>    
+</section>
+<section id="skills">
+  <h2>Skills</h2>
+  <h1 data-animate="animate-fadeIn">Languages and Expertise</h1>
+  <div class="skills-1">
+      {% for skill in skills %}
+      <div class="skill">
+          <img src="{{ skill.logo.url }}" class="lang-icon">
+          <div class="skill-name">{{ skill.name }}</div>
+          <div class="skill-bar">
+              <div class="skill-percentage" style="width: {{ skill.percentage }}%;" data-animate="animate-fillSkillBar"><p> {{ skill.percentage }}%</p></div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+</section>
+<section id="portfolio">
+  <h2>Portfolio</h2>
+  <h1 data-animate="animate-dropDownFromTop">My Works</h1>
+  <div class="portfolio">
+      {% for project in projects %}
+      <div class="project" data-animate="animate-fadeIn" onclick="location.href='{{ project.link }}';" style="cursor: pointer;">
+          <img src="{{ project.image.url }}" alt="Project Image" class="project-image">
+          <div class="overlay">
+              <div class="text">
+                  <h4>{{ project.title }}</h4>
+                  <p>{{ project.description }}</p>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+</section>
+<section id="contact">
+  <h2>Hire Me!</h2>
+  <h1 data-animate="animate-fadeIn">CV/Resume & Contact</h1>
+  <div class="contact-section">
+       <div class="cv-container" data-animate="animate-dropTopFromDown">
+        {% if profile.cv_image %}
+            <img src="{{ profile.cv_image.url }}" alt="CV Preview" class="cv-preview">
+        {% endif %}
+        {% if profile.cv_file %}
+            <a href="{{ profile.cv_file.url }}" download="{{ profile.cv_file.name }}" class="download-btn">Download</a>
+        {% endif %}
+      </div>
+       <div class="contact-form-container" data-animate="animate-dropDownFromTop">
+          <h3>Got a project? Let's Talk!</h3>
+          <form id="contactForm" method="post" action="{% url 'myapp:portfolio' %}">
+            {% csrf_token %}
+            <input type="text" id="name" name="name" placeholder="Name" required>
+            <input type="email" id="email" name="email" placeholder="Email Address" required>
+            <input type="text" id="project-name" name="project_name" placeholder="Project Name" required>
+            <button type="submit">Send</button>
+          </form>          
+      </div>
+  </div>      
+</section>
+<script>
+     var text = "       student developer";
+    var index = 0;
+    var speed = 120;  
+
+    function typeWriter() {
+        if (index < text.length) {
+            document.getElementById("developer-text").innerHTML += text.charAt(index);
+            index++;
+            setTimeout(typeWriter, speed);
+        }
+    }
+
+     window.onload = function() {
+        typeWriter();
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+  const sections = document.querySelectorAll("section");
+  const navLinks = document.querySelectorAll("nav ul li a");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const activeSection = entry.target.getAttribute("id");
+        navLinks.forEach(link => {
+          link.classList.toggle("active", activeSection === link.getAttribute("href").substring(1));
+        });
+      }
+    });
+  }, { rootMargin: "-50% 0px -50% 0px" });
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add(entry.target.dataset.animate);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.5  
+  });
+
+   document.querySelectorAll('[data-animate]').forEach(item => {
+    observer.observe(item);
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const percentage = entry.target.style.width;
+        entry.target.style.setProperty('--target-width', percentage);
+        entry.target.classList.add(entry.target.dataset.animate);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.5
+  });
+
+  document.querySelectorAll('.skill-percentage[data-animate="animate-fillSkillBar"]').forEach(item => {
+    observer.observe(item);
+  });
+});
+
+</script>
+</body>
+</html> 
